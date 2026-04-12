@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ワードル JP — 5文字ひらがな Wordle</title>
+  <meta name="description" content="日本語版 Wordle。5文字のひらがなを6回以内に当てる。日替わり問題 + 練習モード。" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ── Header ─────────────────────────────────────────────────── -->
+  <header class="app-header">
+    <div class="header-left">
+      <button id="btn-howto" class="icon-btn" title="遊び方" aria-label="遊び方">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             width="22" height="22">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="header-center">
+      <h1 class="app-title">ワードル JP</h1>
+      <span id="mode-indicator" class="mode-indicator"></span>
+    </div>
+
+    <div class="header-right">
+      <button id="btn-lang" class="icon-btn text-btn" aria-label="言語切替">EN</button>
+      <button id="btn-theme" class="icon-btn" aria-label="テーマ切替" title="テーマ">🌙</button>
+      <button id="btn-stats" class="icon-btn" title="成績" aria-label="成績">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             width="22" height="22">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <!-- ── Mode Switcher ──────────────────────────────────────────── -->
+  <nav class="mode-switcher" aria-label="ゲームモード">
+    <button id="btn-daily" class="mode-btn active">今日の問題</button>
+    <button id="btn-practice" class="mode-btn">練習モード</button>
+  </nav>
+
+  <!-- ── Game Grid ──────────────────────────────────────────────── -->
+  <main class="game-area">
+    <div id="grid" class="grid" role="grid" aria-label="ワードルグリッド"></div>
+  </main>
+
+  <!-- ── Toast ─────────────────────────────────────────────────── -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- ── On-screen Keyboard ────────────────────────────────────── -->
+  <section class="keyboard-section" aria-label="ひらがなキーボード">
+    <div id="keyboard" class="keyboard">
+      <!-- Row 1: あ行 か行 さ行 -->
+      <div class="kb-row">
+        <button class="key" data-char="あ">あ</button>
+        <button class="key" data-char="い">い</button>
+        <button class="key" data-char="う">う</button>
+        <button class="key" data-char="え">え</button>
+        <button class="key" data-char="お">お</button>
+        <div class="key-spacer"></div>
+        <button class="key" data-char="か">か</button>
+        <button class="key" data-char="き">き</button>
+        <button class="key" data-char="く">く</button>
+        <button class="key" data-char="け">け</button>
+        <button class="key" data-char="こ">こ</button>
+        <div class="key-spacer"></div>
+        <button class="key" data-char="さ">さ</button>
+        <button class="key" data-char="し">し</button>
+        <button class="key" data-char="す">す</button>
+        <button class="key" data-char="せ">せ</button>
+        <button class="key" data-char="そ">そ</button>
+      </div>
+      <!-- Row 2: た行 な行 は行 -->
+      <div class="kb-row">
+        <button class="key" data-char="た">た</button>
+        <button class="key" data-char="ち">ち</button>
+        <button class="key" data-char="つ">つ</button>
+        <button class="key" data-char="て">て</button>
+        <button class="key" data-char="と">と</button>
+        <div class="key-spacer"></div>
+        <button class="key" data-char="な">な</button>
+        <button class="key" data-char="に">に</button>
+        <button class="key" data-char="ぬ">ぬ</button>
+        <button class="key" data-char="ね">ね</button>
+        <button class="key" data-char="の">の</button>
+        <div class="key-spacer"></div>
+        <button class="key" data-char="は">は</button>
+        <button class="key" data-char="ひ">ひ</button>
+        <button class="key" data-char="ふ">ふ</button>
+        <button class="key" data-char="へ">へ</button>
+        <button class="key" data-char="ほ">ほ</button>
+      </div>
+      <!-- Row 3: ま行 や行 ら行 -->
+      <div class="kb-row">
+        <button class="key" data-char="ま">ま</button>
+        <button class="key" data-char="み">み</button>
+        <button class="key" data-char="む">む</button>
+        <button class="key" data-char="め">め</button>
+        <button class="key" data-char="も">も</button>
+        <div class="key-spacer"></div>
+        <button class="key" data-char="や">や</button>
+        <button class="key" data-char="ゆ">ゆ</button>
+        <button class="key" data-char="よ">よ</button>
+        <div class="key-spacer"></div>
+        <button class="key" data-char="ら">ら</button>
+        <button class="key" data-char="り">り</button>
+        <button class="key" data-char="る">る</button>
+        <button class="key" data-char="れ">れ</button>
+        <button class="key" data-char="ろ">ろ</button>
+      </div>
+      <!-- Row 4: わ行 + small vowels + ん + controls -->
+      <div class="kb-row">
+        <button class="key" data-char="わ">わ</button>
+        <button class="key" data-char="を">を</button>
+        <button class="key" data-char="ん">ん</button>
+        <div class="key-spacer"></div>
+        <button class="key" data-char="っ">っ</button>
+        <button class="key" data-char="ゃ">ゃ</button>
+        <button class="key" data-char="ゅ">ゅ</button>
+        <button class="key" data-char="ょ">ょ</button>
+        <div class="key-spacer"></div>
+        <button class="key" data-char="が">が</button>
+        <button class="key" data-char="ぎ">ぎ</button>
+        <button class="key" data-char="ぐ">ぐ</button>
+        <button class="key" data-char="げ">げ</button>
+        <button class="key" data-char="ご">ご</button>
+      </div>
+      <!-- Row 5: voiced consonants + controls -->
+      <div class="kb-row">
+        <button class="key" data-char="ざ">ざ</button>
+        <button class="key" data-char="じ">じ</button>
+        <button class="key" data-char="ず">ず</button>
+        <button class="key" data-char="ぜ">ぜ</button>
+        <button class="key" data-char="ぞ">ぞ</button>
+        <div class="key-spacer"></div>
+        <button class="key" data-char="だ">だ</button>
+        <button class="key" data-char="ぢ">ぢ</button>
+        <button class="key" data-char="づ">づ</button>
+        <button class="key" data-char="で">で</button>
+        <button class="key" data-char="ど">ど</button>
+        <div class="key-spacer"></div>
+        <button class="key" data-char="ば">ば</button>
+        <button class="key" data-char="び">び</button>
+        <button class="key" data-char="ぶ">ぶ</button>
+        <button class="key" data-char="べ">べ</button>
+        <button class="key" data-char="ぼ">ぼ</button>
+      </div>
+      <!-- Row 6: p-consonants + long vowel + enter/delete -->
+      <div class="kb-row">
+        <button class="key" data-char="ぱ">ぱ</button>
+        <button class="key" data-char="ぴ">ぴ</button>
+        <button class="key" data-char="ぷ">ぷ</button>
+        <button class="key" data-char="ぺ">ぺ</button>
+        <button class="key" data-char="ぽ">ぽ</button>
+        <div class="key-spacer"></div>
+        <button class="key" data-char="う゛">ゔ</button>
+        <div class="key-spacer"></div>
+        <button class="key key--wide" data-action="delete" aria-label="削除">⌫</button>
+        <button class="key key--wide key--enter" data-action="enter" aria-label="確定">確定</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stats Modal ────────────────────────────────────────────── -->
+  <div id="stats-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="stats-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="stats-title">成績</h2>
+        <button id="stats-close" class="close-btn" aria-label="閉じる">✕</button>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-cell">
+          <span id="stat-played" class="stat-value">0</span>
+          <span id="label-played" class="stat-label">プレイ数</span>
+        </div>
+        <div class="stat-cell">
+          <span id="stat-winpct" class="stat-value">0</span>
+          <span id="label-winpct" class="stat-label">勝率</span>
+        </div>
+        <div class="stat-cell">
+          <span id="stat-streak" class="stat-value">0</span>
+          <span id="label-streak" class="stat-label">現在の連勝</span>
+        </div>
+        <div class="stat-cell">
+          <span id="stat-maxstreak" class="stat-value">0</span>
+          <span id="label-maxstreak" class="stat-label">最高連勝</span>
+        </div>
+      </div>
+      <h3 id="dist-title" class="dist-title">予想回数の分布</h3>
+      <div id="distribution" class="distribution"></div>
+      <button id="share-btn" class="share-btn">結果をシェア</button>
+    </div>
+  </div>
+
+  <!-- ── How-to-play Modal ──────────────────────────────────────── -->
+  <div id="howto-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="howto-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="howto-title">遊び方</h2>
+        <button id="howto-close" class="close-btn" aria-label="閉じる">✕</button>
+      </div>
+      <div class="howto-body">
+        <p>5文字のひらがなを6回以内に当ててください。</p>
+        <p>各入力後、文字の色が変わります：</p>
+        <div class="howto-examples">
+          <div class="howto-row">
+            <div class="tile tile--example" data-status="correct">あ</div>
+            <span>正しい位置</span>
+          </div>
+          <div class="howto-row">
+            <div class="tile tile--example" data-status="present">い</div>
+            <span>含まれるが位置が違う</span>
+          </div>
+          <div class="howto-row">
+            <div class="tile tile--example" data-status="absent">う</div>
+            <span>含まれない</span>
+          </div>
+        </div>
+        <hr />
+        <p class="howto-note">
+          ヒント：オンスクリーンキーボードかローマ字入力でひらがなを入力してください。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
