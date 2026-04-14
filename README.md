@@ -74,3 +74,10 @@ All words pass validation: exactly 5 standard hiragana characters (U+3041–U+30
 ## License
 
 MIT © 2026 [SEN LLC (SEN 合同会社)](https://sen.ltd)
+
+<!-- sen-publish:links -->
+## Links
+
+- 🌐 Demo: https://sen.ltd/portfolio/wordle-jp/
+- 📝 dev.to: https://dev.to/sendotltd/japanese-wordle-why-duplicate-character-handling-is-trickier-than-it-looks-3gja
+<!-- /sen-publish:links -->
